@@ -58,17 +58,25 @@ class Generator
         }
     }
 
-    public function generateApi(string $uri, array $data)
-    {
-        $path = Helper::resolvePath($uri);
+public function generateApi(string $uri, array $data)
+{
+    // Set CORS headers
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE');
 
-        $this->makeDirectoriesIfNotExists(dirname($path));
+    // Resolve path for the JSON file
+    $path = Helper::resolvePath($uri);
 
-        $filePath = $this->getPath($path);
-        file_put_contents($filePath, json_encode($data));
+    // Make necessary directories if not exists
+    $this->makeDirectoriesIfNotExists(dirname($path));
 
-        echo "+ {$uri}" . PHP_EOL;
-    }
+    // Write the data to the file
+    $filePath = $this->getPath($path);
+    file_put_contents($filePath, json_encode($data));
+
+    // Optionally, output a message to indicate the file was generated
+    echo "+ {$uri}" . PHP_EOL;
+}
 
     public function makeDirectoriesIfNotExists(string $path)
     {
